@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="JOpenReport" default="jar" basedir=".">
+
+    <property file="${basedir}/build.properties"/>
+
+
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${class.output.dir}"/>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${class.output.dir}"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac srcdir="${src.dir}" destdir="${class.output.dir}" debug="on" source="1.6" target="1.6"
+               encoding="utf-8">
+        </javac>
+    </target>
+    <target name="jar" depends="compile">
+	<jar basedir="${class.output.dir}" destfile="${build.dir}/${jar.name}.jar">
+	</jar>
+    </target>
+
+</project>
