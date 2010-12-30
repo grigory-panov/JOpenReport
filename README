@@ -1,0 +1,16 @@
+JOpenReport - simple report library written on Java.
+
+License: GPL v2
+
+Template formats: odt or ods
+Output formats: odt or ods, depends of template format.
+
+
+Futures:
+
+
+Library can generate reports from templates, simple replace markers in original template to user defined text.
+Also JOpenReport can generate multiline reports, using tables in original template.
+
+
+(c) Grigory Panov 30th december 2010
