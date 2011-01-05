@@ -12,16 +12,45 @@
     <target name="clean">
         <delete dir="${build.dir}"/>
         <delete dir="${class.output.dir}"/>
+    	<delete file="output.odt" failonerror="false"/>
     </target>
 
     <target name="compile" depends="init">
         <javac srcdir="${src.dir}" destdir="${class.output.dir}" debug="on" source="1.6" target="1.6"
                encoding="utf-8">
+        	<classpath> 
+        		<fileset dir="${lib.dir}" includes="*.jar"/>
+        	</classpath>
         </javac>
     </target>
+	
     <target name="jar" depends="compile">
-	<jar basedir="${class.output.dir}" destfile="${build.dir}/${jar.name}.jar">
-	</jar>
+		<jar basedir="${class.output.dir}" destfile="${build.dir}/${jar.name}.jar"/>
     </target>
+	
+    <target name="compile-sample" depends="jar">
+        <javac srcdir="${sample.dir}" destdir="${class.output.dir}" debug="off" source="1.6" target="1.6"
+               encoding="utf-8" classpath="${lib.dir}/*.jar;${build.dir}/${jar.name}.jar">
+            	<classpath> 
+            		<fileset dir="${lib.dir}" includes="*.jar"/>
+            		<fileset dir="${build.dir}" includes="*.jar"/>
+            	</classpath>
+        </javac>
+    </target>
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: run-sample                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="run-sample" depends="compile-sample">
+            <java dir="${basedir}" fork="true" append="false" output="output.log" logerror="true"
+            	classname="org.jopenreport.sample.Test1" >
+            	<classpath> 
+            		<fileset dir="${basedir}/${class.output.dir}"/>
+	        		<fileset dir="${basedir}/${lib.dir}" includes="*.jar"/>
+	        		<fileset dir="${basedir}/${build.dir}" includes="*.jar"/>
+            	</classpath>
+            	
+            </java>
+    </target>
+
 
 </project>
