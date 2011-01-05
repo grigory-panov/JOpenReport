@@ -1,3 +1,9 @@
-Install Ant and run 
+Install Ant and type 
 
-	ant
+    ant
+
+for run samples type
+
+    ant run-sample
+
+and look to output.odt
