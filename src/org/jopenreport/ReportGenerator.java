@@ -336,26 +336,41 @@ public class ReportGenerator {
 	public boolean save( String fname ){
 		if(docTpl!= null ){
 			File template = new File(templateName);
-			File out = new File(fname);
+			File out = new File(fname);		
+			File content = null;
+			File styles = null;
 			try {
+				content = File.createTempFile("JOpenReport", "content.xml");
+				styles = File.createTempFile("JOpenReport", "styles.xml");
 				XMLSerializer serializer = new XMLSerializer();
 				OutputFormat of = new OutputFormat();
 				of.setEncoding("UTF-8");
-				serializer.setOutputByteStream(new FileOutputStream("content.xml"));
+				serializer.setOutputByteStream(new FileOutputStream(content));
 				serializer.setOutputFormat(of);
 				serializer.serialize(docTpl);
-				serializer.setOutputByteStream(new FileOutputStream("styles.xml"));
+				serializer.setOutputByteStream(new FileOutputStream(styles));
 				serializer.setOutputFormat(of);
 				serializer.serialize(docStyle);
-				File content = new File("content.xml");
-				File styles = new File("styles.xml");
+
 				addFilesToExistingZip(template, out, new File[] {content, styles} );
 				content.delete();
+				content = null;
 				styles.delete();
+				styles = null;
 			} catch (IOException e) {
 				logger.debug("error!");
 				return false;
+			}finally{
+				if(content!= null){
+					content.delete();
+					content = null;
+				}
+				if(styles!= null){
+					styles.delete();
+					styles = null;
+				}
 			}
+			
 		}else{
 			return false;
 		}
@@ -372,9 +387,16 @@ public class ReportGenerator {
 		ZipEntry entry = zin.getNextEntry();
 		while (entry != null) {
 			String name = entry.getName();
+
+			
 			boolean notInFiles = true;
 			for (File f : files) {
-				if (f.getName().equals(name)) {
+				String fname = f.getName();
+				if(fname.endsWith("styles.xml")) 
+					fname = "styles.xml";
+				if(fname.endsWith("content.xml")) 
+					fname = "content.xml";				
+				if (fname.equals(name)) {
 					notInFiles = false;
 					break;
 				}
@@ -396,7 +418,12 @@ public class ReportGenerator {
 		for (int i = 0; i < files.length; i++) {
 			InputStream in = new FileInputStream(files[i]);
 			// Add ZIP entry to output stream.
-			out.putNextEntry(new ZipEntry(files[i].getName()));
+			String fname = files[i].getName();
+			if(fname.endsWith("styles.xml")) 
+				fname = "styles.xml";
+			if(fname.endsWith("content.xml")) 
+				fname = "content.xml";	
+			out.putNextEntry(new ZipEntry(fname));
 			// Transfer bytes from the file to the ZIP file
 			int len;
 			while ((len = in.read(buf)) > 0) {
