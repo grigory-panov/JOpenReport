@@ -16,9 +16,13 @@ public class Test1 {
 			// replace fields
 			generator.setValue(generator.PARAM, "value for field1");
 			generator.exec("tag1");
+			
 			generator.setValue(generator.PARAM, "value for field2");
 			generator.exec("tag2");
 
+			generator.setValue(generator.PARAM, "very very very long value for field3. I don't know what to do. Keep in line this long text. Arrrgh! ");
+			generator.exec("tag3");
+			
 			// populating table section
 			generator.setValue("field1", "test");
 			generator.setValue("field2", "another column");
